@@ -1,0 +1,45 @@
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+.button {
+    /*background-color: #04AA6D; /* Green */
+    border: none;
+    color: white;
+    padding: 0px 0px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    /* font-size: 15px; */
+    width: 50%;
+    background: linear-gradient(0deg, #79D021 63%, #02CCFE 50%);
+  }
+
+.text_box{
+  display: block;
+  width: 70%;
+  height: 100px;
+  padding: 0 0;
+  border: 10px solid wheat;
+  padding: 2px;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  overflow: scroll;
+  text-align: left;
+  font-size: 14px;
+}
+
+
+.img {
+  border: 5px solid black;
+}
+
+.blur{
+  color: transparent;
+  text-shadow: 0 0 8px #000;
+}

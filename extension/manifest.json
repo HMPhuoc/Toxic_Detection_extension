@@ -1,0 +1,24 @@
+{
+    "manifest_version": 3,
+    "name": "Toxic",
+    "version": "0.0.1",
+    "description": "Detect",
+    "permissions":["activeTab", "scripting", "storage"],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "icons": {
+      "16": "/images/image.png",
+      "48": "/images/image.png",
+      "128": "/images/image.png"
+    },
+    "action": {
+        "default_icon":{
+            "16": "/images/image2.png",
+            "48": "/images/image2.png",
+            "128": "/images/image2.png"
+        },
+        "default_title": "Toxic Detection",
+        "default_popup": "popup.html"
+    }
+}

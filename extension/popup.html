@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="popup.css">
+    <style>
+        body {
+            min-width:300px;
+        }
+    </style>
+    <title>Toxic Detection</title>
+</head>
+<body style="background: linear-gradient(0deg, red 55%, white 50%);">
+    <div style="text-align: center;">
+        <h1>Toxic Detection Tool</h1>
+        <img src="images/image.png" width="50%" height="auto" class="img">
+        <h3>Please click here to start</h3>
+        <button id = "scrapePage" class="button">
+            <!-- <h3>Toxic Detect</h3>  -->
+            <!-- <marquee behavior="scroll" direction="left" scrollamount="10"><b>Toxic Detection</b></marquee> -->
+            <b>Toxic Detect</b>
+            <marquee behavior="scroll" direction="left" id="check"><b>&#127795;Click here&#127795;	</b></marquee>
+            <img src="images/run.gif" width="30%" height="auto">
+            <img src="images/run.gif" width="30%" height="auto">
+            <img src="images/run.gif" width="30%" height="auto">
+        </button>
+        <div id="box"class="text_box">
+            <span id="toxic">
+
+            </span>
+        </div>
+        <img id="make_blur"src="images/pokeball.png" width="10%" height="auto" style="transform: rotate(180deg);" class="center">
+        <script src="popup.js"></script>
+        <!-- <script>
+            setTimeout(()=>{setInterval(()=>{document.getElementById("toxic").innerHTML = "Nội dung";}, 5000)},30000)
+        </script> -->
+
+    </div>
+</body>
+</html>
