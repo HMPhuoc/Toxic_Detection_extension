@@ -1,4 +1,4 @@
-![image](https://github.com/HMPhuoc/Toxic_Detection_extension/assets/94670932/b8e59890-60d0-47dc-9187-13eea9d5ae0f)
+![summary](https://github.com/HMPhuoc/Toxic_Detection_extension/assets/94670932/ca649bc5-ea27-4a38-9ca1-aa3c2e0358aa)
 
 > The extension is built to detect Vietnamese toxic cases.
 ## **GUIDE**
