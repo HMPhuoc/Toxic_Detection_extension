@@ -25,8 +25,12 @@ async function scrapePage(){
     
     let allElement = document.body.getElementsByTagName('*');
     for (let index = 0; index < allElement.length; index++) {
-      const element = allElement[index].innerText.trim();
-      pairs.add(element)
+      const element = allElement[index].innerText;
+      console.log(`Scraped ${index} element`)
+      if(typeof element == 'string'){
+        console.log(element)
+        pairs.add(element)
+      }
     }  
 
     const arr = Array.from(pairs);
@@ -40,12 +44,13 @@ async function scrapePage(){
 
     for (const content of arr){
       // console.log(content)
+      console.log(content)
       fetch(url, {
         method: "POST",
         headers: {
           "Content-type": "application/json; charset=UTF-8"
         },
-        body: JSON.stringify({"comment": content})
+        body: JSON.stringify({"comment": content.trim()})
       })
       .then((response) => response.json())
       .then((json)=> {
@@ -67,11 +72,11 @@ async function scrapePage(){
 
 function blur_text(){
   
-  var span = document.getElementsByTagName('span');
-  for (let index = 0; index < span.length; index++) {
-    var element = span[index];
-    element.parentNode.removeChild(element)
-  }
+  // var span = document.getElementsByTagName('span');
+  // for (let index = 0; index < span.length; index++) {
+  //   var element = span[index];
+  //   element.parentNode.removeChild(element)
+  // }
   
   // var breaks = document.getElementsByTagName('br');
   // for (let index = 0; index < breaks.length; index++) {
@@ -92,9 +97,9 @@ function blur_text(){
     //   element.parentNode.removeChild(element)
     // }
     chrome.storage.local.get("content", (result)=>{
-      console.log(result.content)
-      if(result.content.includes(element.innerText.trim())){
-        console.log(element)
+      //console.log(result.content)
+      if(result.content.includes(element.innerText)){
+        //console.log(element)
         element.style.color = "red"
       }
     })
@@ -122,6 +127,9 @@ let scrape = document.getElementById('scrapePage');
 
 //sự kiện nhấn nút
 scrape.addEventListener("click", async()=>{
+
+    chrome.storage.local.set({"content":["Text will be shown here"]});
+
     //cái ô text
     let text = document.getElementById('toxic')
     text.innerHTML = "Loading..."
@@ -137,8 +145,9 @@ scrape.addEventListener("click", async()=>{
           //alert(JSON.stringify(result.content));
           text.innerHTML = ""
           for (const line of result.content){
-            
-            run.innerHTML = `<b>&#127795;Detected ${result.content.length} case(s)!&#127795;	</b>`
+            if(result.content.length!=1){
+              run.innerHTML = `<b>&#127795;Detected ${result.content.length} case(s)!&#127795;	</b>`
+            }
             text.innerHTML = text.innerHTML+ `<p>${JSON.stringify(line.trim()).replace(/(\\+n)/g, '')}</p>` + '\n\n';
           }
         });
@@ -163,7 +172,7 @@ scrape.addEventListener("click", async()=>{
 let makeBlur = document.getElementById('make_blur');
 makeBlur.addEventListener("click",async()=>{
   let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-
+  
   chrome.scripting.executeScript({
     target: {tabId: tab.id},
     func: blur_text
@@ -171,5 +180,57 @@ makeBlur.addEventListener("click",async()=>{
 })
 
 
+window.addEventListener("DOMContentLoaded", (event) => {
+  let check = document.getElementById('check_word');
+  if(check){
+    check.addEventListener("click", async()=>{
+      
+      text = document.getElementById("word").value;
+      console.log(text)
+      url = 'https://hmphuoc-toxic.hf.space/check'
+    
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        },
+        body: JSON.stringify({"comment": text.trim()})
+      })
+      .then((response) => response.json())
+      .then((json)=> {
+        toxic_score = json
+        let box = document.getElementById('word_box');
+          box.innerText=`
+          This case "${text}" has the value:
+          toxic: ${toxic_score[0].toFixed(2)}
+          severe toxic: ${toxic_score[1].toFixed(2)}
+          obscene: ${toxic_score[2].toFixed(2)}
+          threat: ${toxic_score[3].toFixed(2)}
+          insult: ${toxic_score[4].toFixed(2)}
+          identity hate: ${toxic_score[5].toFixed(2)}
+          `
+          
+      });
+    
+    })
+
+  }
+});
+
+
+
+
+document.querySelectorAll('button.tablinks').forEach(bt => 
+  {
+  bt.onclick = e =>
+    {
+    let btGroup = bt.closest('div')
+    btGroup.querySelectorAll('button.tablinks').forEach( gBt => 
+      gBt.classList.toggle('active', gBt===bt))
+      
+    btGroup.querySelectorAll('div.tabcontent').forEach( gDv => 
+      gDv.classList.toggle('open', gDv.id===bt.dataset.tab))
+    }
+  })
 
 

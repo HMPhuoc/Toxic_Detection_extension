@@ -39,7 +39,28 @@
   border: 5px solid black;
 }
 
-.blur{
-  color: transparent;
-  text-shadow: 0 0 8px #000;
+
+
+button.active {
+  background-color: #03a1fc;
+}
+.tabcontent {
+  display: none;
+}
+.tabcontent.open {
+  display: block;
+}
+
+
+
+.check_button {
+  background-color: #04AA6D; /* Green */
+  border: none;
+  color: white;
+  padding: 0px 0px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  /* font-size: 15px; */
+  width: 50%;
 }
