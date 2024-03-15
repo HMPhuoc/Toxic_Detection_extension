@@ -1,6 +1,9 @@
+var stop_loop = false
+
 //cái này chạy này
-async function scrapePage(){
+function scrapePage(tab_url){
   
+    console.log(tab_url)
     // bắt đầu từ đoạn này là quét nd
     // const IGNORE = ["style", "script"]
     // const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
@@ -26,9 +29,9 @@ async function scrapePage(){
     let allElement = document.body.getElementsByTagName('*');
     for (let index = 0; index < allElement.length; index++) {
       const element = allElement[index].innerText;
-      console.log(`Scraped ${index} element`)
+      //console.log(`Scraped ${index} element`)
       if(typeof element == 'string'){
-        console.log(element)
+        //console.log(element)
         pairs.add(element)
       }
     }  
@@ -43,6 +46,9 @@ async function scrapePage(){
     let last_item = arr[arr.length-1];
 
     for (const content of arr){
+      
+      
+
       // console.log(content)
       console.log(content)
       fetch(url, {
@@ -54,15 +60,18 @@ async function scrapePage(){
       })
       .then((response) => response.json())
       .then((json)=> {
-        toxic_score = json[0]
-        if(toxic_score>=0.7){
-          cases.push(content); 
-          //lưu mảng lại vào máy
-          chrome.storage.local.set({"content":cases});
-          
-          if(content==last_item){
-            console.log(cases);
+        if(document.visibilityState == "visible"){
+          toxic_score = json[0]
+          if(toxic_score>=0.7){
+              
+              cases.push(content); 
+            
+            //lưu mảng lại vào máy
+            chrome.storage.local.set({"content":cases});
+            //console.log(cases);
+            
           }
+
         }
       });
     }
@@ -70,7 +79,7 @@ async function scrapePage(){
       
 }
 
-function blur_text(){
+function blur_text(tab_url){
   
   // var span = document.getElementsByTagName('span');
   // for (let index = 0; index < span.length; index++) {
@@ -127,6 +136,7 @@ let scrape = document.getElementById('scrapePage');
 
 //sự kiện nhấn nút
 scrape.addEventListener("click", async()=>{
+    
 
     chrome.storage.local.set({"content":["Text will be shown here"]});
 
@@ -136,30 +146,33 @@ scrape.addEventListener("click", async()=>{
 
     //dòng chữ trên nút
     let run = document.getElementById("check")
-    run.innerHTML = "<b>&#127795;Running&#127795;	</b>"
+    
+    //lấy trang hiện tại
+    let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+    url = tab.url
+    run.innerHTML = `<b>&#127795; Running on ${url} &#127795;	</b>`
     
     //spam đổi text trong ô text
     setTimeout(()=>{
       setInterval(()=>{
+        
         chrome.storage.local.get("content", function(result){
           //alert(JSON.stringify(result.content));
           text.innerHTML = ""
           for (const line of result.content){
-            if(result.content.length!=1){
+            if(result.content!="Text will be shown here"){
               run.innerHTML = `<b>&#127795;Detected ${result.content.length} case(s)!&#127795;	</b>`
             }
             text.innerHTML = text.innerHTML+ `<p>${JSON.stringify(line.trim()).replace(/(\\+n)/g, '')}</p>` + '\n\n';
           }
         });
-      }, 500)
-    },300)
+      }, 50)
+    },30)
 
-    //lấy trang hiện tại
-    let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-    
     
     //Excecute script chạy cái func trên cùng
-    await chrome.scripting.executeScript({
+    chrome.scripting.executeScript({
+      args: [url],
       target: {tabId: tab.id},
       func: scrapePage
     })
@@ -171,9 +184,11 @@ scrape.addEventListener("click", async()=>{
 
 let makeBlur = document.getElementById('make_blur');
 makeBlur.addEventListener("click",async()=>{
+  stop_loop = true
   let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-  
+  url = tab.url
   chrome.scripting.executeScript({
+    args: [url],
     target: {tabId: tab.id},
     func: blur_text
   })
