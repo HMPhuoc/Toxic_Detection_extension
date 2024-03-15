@@ -1,5 +1,3 @@
-var stop_loop = false
-
 //cái này chạy này
 function scrapePage(tab_url){
   
