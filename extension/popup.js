@@ -195,6 +195,7 @@ makeBlur.addEventListener("click",async()=>{
 
 window.addEventListener("DOMContentLoaded", (event) => {
   let check = document.getElementById('check_word');
+  let chart
   if(check){
     check.addEventListener("click", async()=>{
       
@@ -223,6 +224,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
           identity hate: ${toxic_score[5].toFixed(2)}
           `
           var chartElement = document.getElementById('chart')
+          chartElement.getContext('2d').clearRect(0, 0, chartElement.width, chartElement.height)
           var config = {
             type: "bar",
             data: {
@@ -250,7 +252,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                   ticks: {
                     color: "rgba(255, 255, 255, 1)",
                     stepSize: 0.1,
-                    beginAtZero: true
+                    beginAtZero: true,
+                    max: 1
                   }
                 },
                 x: {
@@ -263,7 +266,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
               }
             }
           }
-          var chart = new Chart(chartElement, config)
+          if(chart){
+            chart.clear()
+            chart.destroy()
+            chart = new Chart(chartElement, config)
+          }
+          else{
+            chart = new Chart(chartElement, config)
+          }
       });
     
     })
