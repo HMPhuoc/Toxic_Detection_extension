@@ -222,7 +222,48 @@ window.addEventListener("DOMContentLoaded", (event) => {
           insult: ${toxic_score[4].toFixed(2)}
           identity hate: ${toxic_score[5].toFixed(2)}
           `
-          
+          var chartElement = document.getElementById('chart')
+          var config = {
+            type: "bar",
+            data: {
+              labels: ["toxic", "severe toxic", "obscene", "threat", "insult", "identity hate"],
+              datasets: [{ 
+                label: "Toxic Detect",
+                data: toxic_score,
+                backgroundColor: "rgba(255, 255, 255, 1)",
+                borderColor: "rgba(0, 0, 0, 1)",
+                borderWidth: 1,
+                hoverBackgroundColor: "rgba(232,105,90,1)",
+                hoverBorderColor: "orange",
+              }]
+            },
+            options: {
+              plugins: { 
+                legend: {
+                  labels: {
+                    color: "rgba(255, 255, 255, 1)"
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  ticks: {
+                    color: "rgba(255, 255, 255, 1)",
+                    stepSize: 0.1,
+                    beginAtZero: true
+                  }
+                },
+                x: {
+                  ticks: {
+                    color: "rgba(255, 255, 255, 1)",
+                    stepSize: 1,
+                    beginAtZero: true
+                  }
+                }
+              }
+            }
+          }
+          var chart = new Chart(chartElement, config)
       });
     
     })
