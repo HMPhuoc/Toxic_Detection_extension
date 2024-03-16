@@ -249,11 +249,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
               },
               scales: {
                 y: {
+                  max: 1,
                   ticks: {
                     color: "rgba(255, 255, 255, 1)",
                     stepSize: 0.1,
-                    beginAtZero: true,
-                    max: 1
+                    beginAtZero: true
                   }
                 },
                 x: {
