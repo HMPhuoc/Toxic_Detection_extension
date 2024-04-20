@@ -3,7 +3,7 @@
     "name": "Toxic",
     "version": "0.0.2",
     "description": "Detect",
-    "permissions":["activeTab", "scripting", "storage"],
+    "permissions":["activeTab", "scripting", "storage","unlimitedStorage"],
     "background": {
         "service_worker": "background.js"
     },

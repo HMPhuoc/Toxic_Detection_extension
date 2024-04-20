@@ -1,27 +1,6 @@
-//cái này chạy này
 function scrapePage(tab_url){
   
     console.log(tab_url)
-    // bắt đầu từ đoạn này là quét nd
-    // const IGNORE = ["style", "script"]
-    // const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
-    // const pairs = new Set()
-    // let node
-    // while ((node = walker.nextNode()) !== null) {
-    //     const parent = node.parentNode.tagName;
-      
-    //     if (IGNORE.includes(parent.toLowerCase())) {
-    //       continue;
-    //     }
-      
-    //     const value = node.nodeValue;
-      
-    //     if (value.length == 0) {
-    //       continue;
-    //     }
-    //     pairs.add(value);
-    //   }
-
     const pairs = new Set()
     
     let allElement = document.body.getElementsByTagName('*');
@@ -36,18 +15,14 @@ function scrapePage(tab_url){
 
     const arr = Array.from(pairs);
     console.log(arr);
-    //tới đây
 
-    //fetch lên check toxic
     url = 'https://hmphuoc-toxic.hf.space/check'
     var cases = []
+    var s_cases = []
     let last_item = arr[arr.length-1];
 
     for (const content of arr){
-      
-      
 
-      // console.log(content)
       console.log(content)
       fetch(url, {
         method: "POST",
@@ -60,106 +35,88 @@ function scrapePage(tab_url){
       .then((json)=> {
         if(document.visibilityState == "visible"){
           toxic_score = json[0]
-          if(toxic_score>=0.7){
+          if(toxic_score>=0.5 && toxic_score<0.7){
               
               cases.push(content); 
             
-            //lưu mảng lại vào máy
-            chrome.storage.local.set({"content":cases});
-            //console.log(cases);
+              
+            }
+          if(toxic_score>=0.7){
+            
+            s_cases.push(content); 
+            
             
           }
+            
+          chrome.storage.local.set({"content":cases,"s_content":s_cases});
 
         }
       });
     }
+    
     console.log(pairs.size);
       
 }
 
-function blur_text(tab_url){
-  
-  // var span = document.getElementsByTagName('span');
-  // for (let index = 0; index < span.length; index++) {
-  //   var element = span[index];
-  //   element.parentNode.removeChild(element)
-  // }
-  
-  // var breaks = document.getElementsByTagName('br');
-  // for (let index = 0; index < breaks.length; index++) {
-  //   var element = breaks[index];
-  //   element.parentNode.removeChild(element)
-  // }
+function blur_text(){
 
   console.log('blur')
   var allElement = document.body.getElementsByTagName('*');
   for (let index = 0; index < allElement.length; index++) {
     const element = allElement[index];
     
-    // if(element.tagName.toLowerCase()==='span'){
-    //   element.parentNode.removeChild(element)
-    // }
-    // if(element.tagName.toLowerCase()==='br'){
-    //   console.log(element);
-    //   element.parentNode.removeChild(element)
-    // }
-    chrome.storage.local.get("content", (result)=>{
-      //console.log(result.content)
+    chrome.storage.local.get(["content","s_content"], (result)=>{
+      console.log(result.content)
+      console.log(result.s_content)
       if(result.content.includes(element.innerText)){
         //console.log(element)
         element.style.color = "red"
       }
+      if(result.s_content.includes(element.innerText)){
+        //console.log(element)
+        element.style.color = "transparent"
+      }
     })
+
+    // chrome.storage.local.get("s_content", (result)=>{
+    //   console.log(result.content)
+    //   // if(result.content.includes(element.innerText)){
+    //   //   //console.log(element)
+    //   //   element.style.color = "transparent"
+    //   // }
+    // })
   }
-  // document.body.getElementsByTagName('*').forEach((element)=>{
-  //   console.log(element);
-  //   chrome.storage.local.get("content",(result)=>{
-  //       console.log(element);
-  //       if(result.content.includes(element.innerHTML)){
-  //         //let style = getComputedStyle(element)
-  //         //console.log(style)
-  //         console.log(element.innerHTML)
-  //         console.log(element)
-  //         //console.log(result.content);
-  //         //style.color = 'transparent';
-  //         element.style.color = 'transparent'
-  //       }
-  //     })
-  //   })
+
   
 }
 
-// cái nút
 let scrape = document.getElementById('scrapePage');
 
-//sự kiện nhấn nút
 scrape.addEventListener("click", async()=>{
     
+    chrome.storage.local.clear()
 
-    chrome.storage.local.set({"content":["Text will be shown here"]});
+    chrome.storage.local.set({"content":["Text will be shown here"],"s_content":[]});
 
-    //cái ô text
     let text = document.getElementById('toxic')
     text.innerHTML = "Loading..."
 
-    //dòng chữ trên nút
     let run = document.getElementById("check")
     
-    //lấy trang hiện tại
     let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
     url = tab.url
     run.innerHTML = `<b>&#127795; Running on ${url} &#127795;	</b>`
     
-    //spam đổi text trong ô text
     setTimeout(()=>{
       setInterval(()=>{
         
-        chrome.storage.local.get("content", function(result){
-          //alert(JSON.stringify(result.content));
+        chrome.storage.local.get(["content","s_content"], function(result){
+ 
           text.innerHTML = ""
-          for (const line of result.content){
+          all_result = result.content.concat(result.s_content)
+          for (const line of all_result){
             if(result.content!="Text will be shown here"){
-              run.innerHTML = `<b>&#127795;Detected ${result.content.length} case(s)!&#127795;	</b>`
+              run.innerHTML = `<b>&#127795;Detected ${all_result.length} case(s)!&#127795;	</b>`
             }
             text.innerHTML = text.innerHTML+ `<p>${JSON.stringify(line.trim()).replace(/(\\+n)/g, '')}</p>` + '\n\n';
           }
@@ -168,7 +125,6 @@ scrape.addEventListener("click", async()=>{
     },30)
 
     
-    //Excecute script chạy cái func trên cùng
     chrome.scripting.executeScript({
       args: [url],
       target: {tabId: tab.id},
@@ -176,13 +132,11 @@ scrape.addEventListener("click", async()=>{
     })
     
     
-    
-    
 })
 
 let makeBlur = document.getElementById('make_blur');
 makeBlur.addEventListener("click",async()=>{
-  stop_loop = true
+  
   let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
   url = tab.url
   chrome.scripting.executeScript({
