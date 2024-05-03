@@ -18,6 +18,22 @@
     background: linear-gradient(0deg, #79D021 63%, #02CCFE 50%);
   }
 
+.blur_button{
+  display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+
+}
+.blur_button:hover{
+  filter: brightness(120%);
+}
+.blur_button:active{
+    transform: rotate(180deg);
+    transition: transform 0.3s;
+}
+
+
 .text_box{
   display: block;
   width: 70%;
