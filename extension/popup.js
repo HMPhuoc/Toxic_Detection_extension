@@ -1,11 +1,11 @@
-function scrapePage(tab_url){
+async function scrapePage(tab_url){
   
     console.log(tab_url)
     const pairs = new Set()
     
-    let allElement = document.body.getElementsByTagName('*');
-    for (let index = 0; index < allElement.length; index++) {
-      const element = allElement[index].innerText;
+    let allElement = await document.body.getElementsByTagName('*');
+    for await(const ele of allElement) {
+      const element = ele.innerText;
       //console.log(`Scraped ${index} element`)
       if(typeof element == 'string'){
         //console.log(element)
@@ -14,17 +14,17 @@ function scrapePage(tab_url){
     }  
 
     const arr = Array.from(pairs);
-    console.log(arr);
+    //console.log(arr);
 
     url = 'https://hmphuoc-toxic.hf.space/check'
     var cases = []
     var s_cases = []
-    let last_item = arr[arr.length-1];
+    // let last_item = arr[arr.length-1];
 
-    for (const content of arr){
+    for await(const content of arr){
 
-      console.log(content)
-      fetch(url, {
+      //console.log(content)
+      await fetch(url, {
         method: "POST",
         headers: {
           "Content-type": "application/json; charset=UTF-8"
@@ -55,6 +55,7 @@ function scrapePage(tab_url){
     }
     
     console.log(pairs.size);
+    return "hello";
       
 }
 
@@ -66,8 +67,8 @@ function blur_text(){
     const element = allElement[index];
     
     chrome.storage.local.get(["content","s_content"], (result)=>{
-      console.log(result.content)
-      console.log(result.s_content)
+      //console.log(result.content)
+      //console.log(result.s_content)
       if(result.content.includes(element.innerText)){
         //console.log(element)
         element.style.color = "red"
@@ -96,7 +97,7 @@ scrape.addEventListener("click", async()=>{
     
     chrome.storage.local.clear()
 
-    chrome.storage.local.set({"content":["Text will be shown here"],"s_content":[]});
+    chrome.storage.local.set({"content":["Nothing has been found!"],"s_content":[]});
 
     let text = document.getElementById('toxic')
     text.innerHTML = "Loading..."
@@ -107,7 +108,7 @@ scrape.addEventListener("click", async()=>{
     url = tab.url
     run.innerHTML = `<b>&#127795; Running on ${url} &#127795;	</b>`
     
-    setTimeout(()=>{
+    // setTimeout(()=>{
       setInterval(()=>{
         
         chrome.storage.local.get(["content","s_content"], function(result){
@@ -115,21 +116,33 @@ scrape.addEventListener("click", async()=>{
           text.innerHTML = ""
           all_result = result.content.concat(result.s_content)
           for (const line of all_result){
-            if(result.content!="Text will be shown here"){
+            if(result.content!="Nothing has been found!"){
               run.innerHTML = `<b>&#127795;Detected ${all_result.length} case(s)!&#127795;	</b>`
             }
             text.innerHTML = text.innerHTML+ `<p>${JSON.stringify(line.trim()).replace(/(\\+n)/g, '')}</p>` + '\n\n';
           }
         });
       }, 50)
-    },30)
+    // },30)
 
     
-    chrome.scripting.executeScript({
+    await chrome.scripting.executeScript({
       args: [url],
       target: {tabId: tab.id},
       func: scrapePage
     })
+    .then(returnRes=>{
+      clearInterval()
+      run.innerHTML = run.innerHTML + `<b>Done</b>`
+      for(res of returnRes){
+        alert("Finished scanning!")
+      }
+    })
+
+
+    
+
+    
     
     
 })
