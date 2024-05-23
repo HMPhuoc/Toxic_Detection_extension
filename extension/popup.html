@@ -13,32 +13,29 @@
     </style>
     <title>Toxic Detection</title>
 </head>
-<body style="background: linear-gradient(180deg, white 290px, red 290px);">
+<body style="background: linear-gradient(135deg, white, rgb(0, 157, 255));">
     <div style="text-align: center;">
         <h1>Toxic Detection Tool</h1>
-        <img src="images/image.png" width="50%" height="auto" class="img">
-        
+        <!-- <img src="images/image.png" width="50%" height="auto" class="img">
+         -->
         <div>
-            <button class="tablinks active" data-tab="t11">Scan</button>
-            <button class="tablinks" data-tab="t12">Check</button>
+            <button class="tab tablinks active" data-tab="t11">Scan</button>
+            <button class="tab tablinks" data-tab="t12">Check</button>
           
             <div id="t11" class="tabcontent open">
                 <h3>Please click here to start</h3>
                 <button id = "scrapePage" class="button">
-                    <!-- <h3>Toxic Detect</h3>  -->
-                    <!-- <marquee behavior="scroll" direction="left" scrollamount="10"><b>Toxic Detection</b></marquee> -->
-                    <b>Toxic Detect</b>
-                    <marquee behavior="scroll" direction="left" id="check"><b>&#127795;Click here&#127795;	</b></marquee>
-                    <img src="images/run.gif" width="30%" height="auto">
-                    <img src="images/run.gif" width="30%" height="auto">
-                    <img src="images/run.gif" width="30%" height="auto">
+                    <b id="bt_text" style="text-align: center;">Toxic Detect</b>
                 </button>
                 <div id="box"class="text_box">
                     <span id="toxic">
         
                     </span>
                 </div>
-                <img id="make_blur"src="images/pokeball.png" width="10%" height="auto" alt="Censoring" class="blur_button">
+                <div>
+                    <img id="make_blur"src="images/Cogwheel.png" alt="Censoring" class="blur_button">
+                    <div id="count" style="position: fixed; top: 88%;left: 48.5%; display: inline-block;text-align: center;">0</div>
+                </div>
                 <script src="popup.js"></script>
             </div>
           
@@ -51,7 +48,7 @@
                 </div>
                 <canvas id="chart"></canvas>
                 
-                <img src="images/pokeball.png" width="10%" height="auto" style="transform: rotate(180deg);" class="center">
+                <!-- <img src="images/pokeball.png" width="10%" height="auto" style="transform: rotate(180deg);" class="center"> -->
 
             </div>
           

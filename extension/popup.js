@@ -98,16 +98,19 @@ scrape.addEventListener("click", async()=>{
     chrome.storage.local.clear()
 
     chrome.storage.local.set({"content":["Nothing has been found!"],"s_content":[]});
+    
+    scrape.disabled = true;
 
     let text = document.getElementById('toxic')
     text.innerHTML = "Loading..."
-
-    let run = document.getElementById("check")
+    bt_text = document.getElementById("bt_text")
+    bt_text.innerText = "Finding"
+    //let run = document.getElementById("check")
     
     let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
     url = tab.url
-    run.innerHTML = `<b>&#127795; Running on ${url} &#127795;	</b>`
-    
+    //run.innerHTML = `<b>&#127795; Running on ${url} &#127795;	</b>`
+    let count = document.getElementById("count")
     // setTimeout(()=>{
       setInterval(()=>{
         
@@ -117,7 +120,8 @@ scrape.addEventListener("click", async()=>{
           all_result = result.content.concat(result.s_content)
           for (const line of all_result){
             if(result.content!="Nothing has been found!"){
-              run.innerHTML = `<b>&#127795;Detected ${all_result.length} case(s)!&#127795;	</b>`
+              count.innerText = all_result.length
+              //run.innerHTML = `<b>&#127795;Detected ${all_result.length} case(s)!&#127795;	</b>`
             }
             text.innerHTML = text.innerHTML+ `<p>${JSON.stringify(line.trim()).replace(/(\\+n)/g, '')}</p>` + '\n\n';
           }
@@ -133,7 +137,9 @@ scrape.addEventListener("click", async()=>{
     })
     .then(returnRes=>{
       clearInterval()
-      run.innerHTML = run.innerHTML + `<b>Done</b>`
+      bt_text.innerText = "Done"
+      scrape.disabled = false
+      //run.innerHTML = run.innerHTML + `<b>Done</b>`
       for(res of returnRes){
         alert("Finished scanning!")
       }
@@ -182,7 +188,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         toxic_score = json
         let box = document.getElementById('word_box');
           box.innerText=`
-          This case "${text}" has the value:
+          This case has the values of:
           toxic: ${toxic_score[0].toFixed(2)}
           severe toxic: ${toxic_score[1].toFixed(2)}
           obscene: ${toxic_score[2].toFixed(2)}
