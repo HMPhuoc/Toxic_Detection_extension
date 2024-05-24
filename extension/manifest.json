@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Toxic",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Detect",
     "permissions":["activeTab", "scripting", "storage","unlimitedStorage"],
     "background": {
