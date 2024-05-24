@@ -1,114 +1,23 @@
-async function scrapePage(tab_url){
-  
-    console.log(tab_url)
-    const pairs = new Set()
-    
-    let allElement = await document.body.getElementsByTagName('*');
-    for await(const ele of allElement) {
-      const element = ele.innerText;
-      //console.log(`Scraped ${index} element`)
-      if(typeof element == 'string'){
-        //console.log(element)
-        pairs.add(element)
-      }
-    }  
-
-    const arr = Array.from(pairs);
-    //console.log(arr);
-
-    url = 'https://hmphuoc-toxic.hf.space/check'
-    var cases = []
-    var s_cases = []
-    // let last_item = arr[arr.length-1];
-
-    for await(const content of arr){
-
-      //console.log(content)
-      await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json; charset=UTF-8"
-        },
-        body: JSON.stringify({"comment": content.trim()})
-      })
-      .then((response) => response.json())
-      .then((json)=> {
-        if(document.visibilityState == "visible"){
-          toxic_score = json[0]
-          if(toxic_score>=0.5 && toxic_score<0.7){
-              
-              cases.push(content); 
-            
-              
-            }
-          if(toxic_score>=0.7){
-            
-            s_cases.push(content); 
-            
-            
-          }
-            
-          chrome.storage.local.set({"content":cases,"s_content":s_cases});
-
-        }
-      });
-    }
-    
-    console.log(pairs.size);
-    return "hello";
-      
-}
-
-function blur_text(){
-
-  console.log('blur')
-  var allElement = document.body.getElementsByTagName('*');
-  for (let index = 0; index < allElement.length; index++) {
-    const element = allElement[index];
-    
-    chrome.storage.local.get(["content","s_content"], (result)=>{
-      //console.log(result.content)
-      //console.log(result.s_content)
-      if(result.content.includes(element.innerText)){
-        //console.log(element)
-        element.style.color = "red"
-      }
-      if(result.s_content.includes(element.innerText)){
-        //console.log(element)
-        element.style.color = "transparent"
-      }
-    })
-
-    // chrome.storage.local.get("s_content", (result)=>{
-    //   console.log(result.content)
-    //   // if(result.content.includes(element.innerText)){
-    //   //   //console.log(element)
-    //   //   element.style.color = "transparent"
-    //   // }
-    // })
-  }
-
-  
-}
-
+//Tìm các đoạn toxic
 let scrape = document.getElementById('scrapePage');
-
 scrape.addEventListener("click", async()=>{
     
     chrome.storage.local.clear()
 
     chrome.storage.local.set({"content":["Nothing has been found!"],"s_content":[]});
-    
+    let t1 = new Date()
+    let bt_text = document.getElementById("button_text")
+    bt_text.innerText = "Finding"
+
     scrape.disabled = true;
 
     let text = document.getElementById('toxic')
     text.innerHTML = "Loading..."
-    bt_text = document.getElementById("bt_text")
-    bt_text.innerText = "Finding"
+    
     //let run = document.getElementById("check")
     
     let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-    url = tab.url
+    let url = tab.url
     //run.innerHTML = `<b>&#127795; Running on ${url} &#127795;	</b>`
     let count = document.getElementById("count")
     // setTimeout(()=>{
@@ -117,7 +26,7 @@ scrape.addEventListener("click", async()=>{
         chrome.storage.local.get(["content","s_content"], function(result){
  
           text.innerHTML = ""
-          all_result = result.content.concat(result.s_content)
+          let all_result = result.content.concat(result.s_content)
           for (const line of all_result){
             if(result.content!="Nothing has been found!"){
               count.innerText = all_result.length
@@ -130,7 +39,7 @@ scrape.addEventListener("click", async()=>{
     // },30)
 
     
-    await chrome.scripting.executeScript({
+    chrome.scripting.executeScript({
       args: [url],
       target: {tabId: tab.id},
       func: scrapePage
@@ -139,25 +48,22 @@ scrape.addEventListener("click", async()=>{
       clearInterval()
       bt_text.innerText = "Done"
       scrape.disabled = false
+      let t2 = new Date()
+      var diff = Math.abs(t2-t1)/1000
       //run.innerHTML = run.innerHTML + `<b>Done</b>`
-      for(res of returnRes){
-        alert("Finished scanning!")
+      for(const res of returnRes){
+        alert(`Finished scanning! Took ${diff}s`)
       }
     })
-
-
-    
-
-    
-    
-    
+   
 })
 
+//Tô các đoạn toxic
 let makeBlur = document.getElementById('make_blur');
 makeBlur.addEventListener("click",async()=>{
   
   let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-  url = tab.url
+  let url = tab.url
   chrome.scripting.executeScript({
     args: [url],
     target: {tabId: tab.id},
@@ -166,15 +72,16 @@ makeBlur.addEventListener("click",async()=>{
 })
 
 
+//Tab nhập văn bản kiểm tra
 window.addEventListener("DOMContentLoaded", (event) => {
   let check = document.getElementById('check_word');
   let chart
   if(check){
     check.addEventListener("click", async()=>{
       
-      text = document.getElementById("word").value;
+      let text = document.getElementById("word").value;
       console.log(text)
-      url = 'https://hmphuoc-toxic.hf.space/check'
+      let url = 'https://hmphuoc-toxic.hf.space/check'
     
       fetch(url, {
         method: "POST",
@@ -185,7 +92,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
       })
       .then((response) => response.json())
       .then((json)=> {
-        toxic_score = json
+        let toxic_score = json
         let box = document.getElementById('word_box');
           box.innerText=`
           This case has the values of:
@@ -208,8 +115,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 backgroundColor: "rgba(255, 255, 255, 1)",
                 borderColor: "rgba(0, 0, 0, 1)",
                 borderWidth: 1,
-                hoverBackgroundColor: "rgba(232,105,90,1)",
-                hoverBorderColor: "orange",
+                hoverBackgroundColor: "rgba(46,46,255,1)",
+                hoverBorderColor: "black",
               }]
             },
             options: {
@@ -254,9 +161,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
   }
 });
 
-
-
-
+//Chuyển tab
 document.querySelectorAll('button.tablinks').forEach(bt => 
   {
   bt.onclick = e =>

@@ -68,8 +68,9 @@
 
 
 .tab {
-  background-color: #ddd;
-  border: none;
+  background-color: transparent;
+  border: white;
+  border-width: 1px;
   color: black;
   padding: 10px 20px;
   text-align: center;

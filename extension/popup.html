@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="popup.css">
 
     <script src="node_modules\chart.js\dist\chart.umd.js"></script>
+    <script src="./onPage.js"></script>
     <style>
         body {
             min-width:300px;
@@ -13,7 +14,7 @@
     </style>
     <title>Toxic Detection</title>
 </head>
-<body style="background: linear-gradient(135deg, white, rgb(0, 55, 255));">
+<body style="background: linear-gradient(160deg, rgb(195, 230, 230), rgba(0, 166, 255, 0.834) 80%);">
     <div style="text-align: center;">
         <h1>Toxic Detection Tool</h1>
         <!-- <img src="images/image.png" width="50%" height="auto" class="img">
@@ -25,7 +26,7 @@
             <div id="t11" class="tabcontent open">
                 <h3>Please click here to start</h3>
                 <button id = "scrapePage" class="button">
-                    <b id="bt_text" style="text-align: center;">Toxic Detect</b>
+                    <b id="button_text" style="text-align: center;">Toxic Detect</b>
                 </button>
                 <div id="box"class="text_box">
                     <span id="toxic">
@@ -36,7 +37,7 @@
                     <img id="make_blur"src="images/Cogwheel.png" alt="Censoring" class="blur_button">
                     <div id="count" style="position: fixed; top: 88%;left: 48.5%; display: inline-block;text-align: center;">0</div>
                 </div>
-                <script src="popup.js"></script>
+                <script src="popup.js" type="module"></script>
             </div>
           
             <div id="t12" class="tabcontent">
