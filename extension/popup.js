@@ -20,34 +20,29 @@ scrape.addEventListener("click", async()=>{
     let url = tab.url
     //run.innerHTML = `<b>&#127795; Running on ${url} &#127795;	</b>`
     let count = document.getElementById("count")
-    // setTimeout(()=>{
-      setInterval(()=>{
         
-        chrome.storage.local.get(["content","s_content"], function(result){
- 
-          text.innerHTML = ""
-          let all_result = result.content.concat(result.s_content)
-          for (const line of all_result){
-            if(result.content!="Nothing has been found!"){
-              count.innerText = all_result.length
-              //run.innerHTML = `<b>&#127795;Detected ${all_result.length} case(s)!&#127795;	</b>`
-            }
-            text.innerHTML = text.innerHTML+ `<p>${JSON.stringify(line.trim()).replace(/(\\+n)/g, '')}</p>` + '\n\n';
-          }
-        });
-      }, 50)
-    // },30)
-
-    
     chrome.scripting.executeScript({
       args: [url],
       target: {tabId: tab.id},
       func: scrapePage
     })
     .then(returnRes=>{
-      clearInterval()
       bt_text.innerText = "Done"
       scrape.disabled = false
+
+      chrome.storage.local.get(["content","s_content"], function(result){
+ 
+        text.innerHTML = ""
+        let all_result = result.content.concat(result.s_content)
+        for (const line of all_result){
+          if(result.content!="Nothing has been found!"){
+            count.innerText = all_result.length
+            //run.innerHTML = `<b>&#127795;Detected ${all_result.length} case(s)!&#127795;	</b>`
+          }
+          text.innerHTML = text.innerHTML+ `<p>${JSON.stringify(line.trim()).replace(/(\\+n)/g, '')}</p>` + '\n\n';
+        }
+      });
+
       let t2 = new Date()
       var diff = Math.abs(t2-t1)/1000
       //run.innerHTML = run.innerHTML + `<b>Done</b>`
