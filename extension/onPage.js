@@ -24,13 +24,15 @@ async function scrapePage(tab_url){
       //   pairs.add(element)
       // }
 
-      for(let i = 0; i<ele.childNodes.length;i++){
-        if(ele.childNodes[i].nodeType === Node.TEXT_NODE){
-          pairs.add(ele.childNodes[i].textContent.trim())
+      for await(let element of ele.childNodes){
+        if(element.nodeType === Node.TEXT_NODE){
+          pairs.add(element.textContent.trim())
+          
         }
-        if(ele.childNodes[i].nodeName === "BR"){
+        if(element.nodeName === "BR"){
           pairs.add(ele.textContent.trim())
         }
+        
         // if(ele.childNodes[i].nextSibling.nodeName === "BR"){
         //   let wrapper = document.createElement('div')
         //   wrapper.textContent = ele.childNodes[i].textContent
@@ -127,34 +129,69 @@ function blur_text(){
   for (const element of allElement) {
     
     for(let i = 0; i<element.childNodes.length;i++){
+      // if(element.childNodes[i].nodeType === Node.TEXT_NODE){
+      //   chrome.storage.local.get(["content","s_content"], (result)=>{
+      //     //console.log(result.content)
+      //     //console.log(result.s_content)
+      //     if(result.content.includes(element.childNodes[i].textContent.trim())){
+      //       //console.log(element)
+      //       element.style.color = "red"
+      //     }
+      //     if(result.s_content.includes(element.childNodes[i].textContent.trim())){
+      //       //console.log(element)
+      //       element.style.color = "transparent"
+      //     }
+      //   })
+      // }
       if(element.childNodes[i].nodeType === Node.TEXT_NODE){
         chrome.storage.local.get(["content","s_content"], (result)=>{
           //console.log(result.content)
           //console.log(result.s_content)
-          if(result.content.includes(element.childNodes[i].textContent.trim())){
-            //console.log(element)
-            element.style.color = "red"
+          for(let con of result.content){
+            if(element.childNodes[i].textContent.trim().includes(con)){
+              //console.log(element)
+              element.style.color = "red"
+            }
+            
           }
-          if(result.s_content.includes(element.childNodes[i].textContent.trim())){
-            //console.log(element)
-            element.style.color = "transparent"
-          }
-        })
-      }
-      if(element.childNodes[i].nodeName === "BR"){
-        chrome.storage.local.get(["content","s_content"], (result)=>{
-          //console.log(result.content)
-          //console.log(result.s_content)
-          if(result.content.includes(element.textContent.trim())){
-            //console.log(element)
-            element.style.color = "red"
-          }
-          if(result.s_content.includes(element.textContent.trim())){
-            //console.log(element)
-            element.style.color = "transparent"
+          for(let s_con of result.s_content){
+            if(element.childNodes[i].textContent.trim().includes(s_con)){
+              //console.log(element)
+              element.style.color = "transparent"
+            }
           }
         })
       }
+      // if(element.childNodes[i].nodeName === "BR"){
+      //   chrome.storage.local.get(["content","s_content"], (result)=>{
+      //     //console.log(result.content)
+      //     //console.log(result.s_content)
+      //     if(result.content.includes(element.textContent.trim())){
+      //       //console.log(element)
+      //       element.style.color = "red"
+      //     }
+      //     if(result.s_content.includes(element.textContent.trim())){
+      //       //console.log(element)
+      //       element.style.color = "transparent"
+      //     }
+      //   })
+      // }
+      // if(element.childNodes[i].nodeName === "BR"){
+      //   chrome.storage.local.get(["content","s_content"], (result)=>{
+      //     //console.log(result.content)
+      //     //console.log(result.s_content)
+      //     for(let res of result){
+      //       if(element.textContent.trim().includes(res)){
+      //         //console.log(element)
+      //         element.style.color = "red"
+      //       }
+      //       if(element.textContent.trim().includes(res)){
+      //         //console.log(element)
+      //         element.style.color = "transparent"
+      //       }
+      //     }
+      //   })
+      // }
     }
     
   }
