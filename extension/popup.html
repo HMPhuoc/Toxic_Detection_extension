@@ -22,8 +22,10 @@
         <div>
             <button class="tab tablinks active" data-tab="t11">Scan</button>
             <button class="tab tablinks" data-tab="t12">Check</button>
-            <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+            
             <div id="t11" class="tabcontent open">
+                <input type="checkbox" id="isPlusScan">
+                <label for="isPlusScan"><b>CheckPlus</b></label>
                 <h3>Please click here to start</h3>
                 <button id = "scrapePage" class="button">
                     <b id="button_text" style="text-align: center;">Toxic Detect</b>
@@ -42,8 +44,10 @@
             </div>
           
             <div id="t12" class="tabcontent">
+                <input type="checkbox" id="isPlusWord">
+                <label for="isPlusWord"><b>CheckPlus</b></label>
                 <h3>Check for word</h3>
-                <input id="word" type="text" placeholder="Enter some text">
+                <input id="word" type="text" placeholder="Please enter some text">
                 <button id="check_word" class="check_button">Submit</button>
                 <div id="word_box" class="text_box">
                     

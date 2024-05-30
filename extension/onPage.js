@@ -1,6 +1,6 @@
-async function scrapePage(tab_url){
+async function scrapePage(url){
   
-    console.log(tab_url)
+    console.log(url)
     const pairs = new Set()
     
     let allElement = await document.body.getElementsByTagName('*');
@@ -47,7 +47,7 @@ async function scrapePage(tab_url){
     const arr = Array.from(pairs);
     //console.log(arr);
 
-    url = 'https://hmphuoc-toxic.hf.space/check'
+    //url = 'https://hmphuoc-toxic.hf.space/check'
     let cases = []
     let s_cases = []
     // let last_item = arr[arr.length-1];

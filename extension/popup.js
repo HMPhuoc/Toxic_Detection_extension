@@ -10,14 +10,18 @@ scrape.addEventListener("click", async()=>{
     bt_text.innerText = "Finding"
 
     scrape.disabled = true;
-
+    let checkPlus = document.getElementById("isPlusScan");
+    checkPlus.disabled = true;
     let text = document.getElementById('toxic')
     text.innerHTML = "Loading..."
     
     //let run = document.getElementById("check")
     
     let [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-    let url = tab.url
+    let url = 'https://hmphuoc-toxic.hf.space/check'
+    if(checkPlus.checked){
+      url = 'https://hmphuoc-toxic.hf.space/checkplus'
+    }
     //run.innerHTML = `<b>&#127795; Running on ${url} &#127795;	</b>`
     let count = document.getElementById("count")
         
@@ -29,7 +33,7 @@ scrape.addEventListener("click", async()=>{
     .then(returnRes=>{
       bt_text.innerText = "Done"
       scrape.disabled = false
-
+      checkPlus.disabled = false
       chrome.storage.local.get(["content","s_content"], function(result){
  
         text.innerHTML = ""
@@ -70,6 +74,7 @@ makeBlur.addEventListener("click",async()=>{
 //Tab nhập văn bản kiểm tra
 window.addEventListener("DOMContentLoaded", (event) => {
   let check = document.getElementById('check_word');
+  let checkPlus = document.getElementById("isPlusWord")
   let chart
   if(check){
     check.addEventListener("click", async()=>{
@@ -77,7 +82,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
       let text = document.getElementById("word").value;
       console.log(text)
       let url = 'https://hmphuoc-toxic.hf.space/check'
-    
+      if(checkPlus.checked){
+        url = 'https://hmphuoc-toxic.hf.space/checkplus'
+      }
       fetch(url, {
         method: "POST",
         headers: {
