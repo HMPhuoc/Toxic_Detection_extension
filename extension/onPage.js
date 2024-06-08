@@ -67,7 +67,7 @@ async function scrapePage(url){
     console.log(promises)
     console.log(resArr)
 
-    for await(res of resArr){
+    for await(const res of resArr){
       index = resArr.indexOf(res)
       const text = arr[index]
       if(document.visibilityState == "visible"){

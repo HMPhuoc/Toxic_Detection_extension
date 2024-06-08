@@ -24,8 +24,12 @@
             <button class="tab tablinks" data-tab="t12">Check</button>
             
             <div id="t11" class="tabcontent open">
-                <input type="checkbox" id="isPlusScan">
-                <label for="isPlusScan"><b>CheckPlus</b></label>
+                <input type="radio" name="scan" id="scan1" value="check" checked>
+                <label for="scan1"><b>Basic</b></label>
+                <input type="radio" name="scan" id="scan2" value="checkbert">
+                <label for="scan2"><b>BERT</b></label>
+                <input type="radio" name="scan" id="scan3" value="checkplus">
+                <label for="scan3"><b>Fused</b></label>
                 <h3>Please click here to start</h3>
                 <button id = "scrapePage" class="button">
                     <b id="button_text" style="text-align: center;">Toxic Detect</b>
@@ -44,8 +48,12 @@
             </div>
           
             <div id="t12" class="tabcontent">
-                <input type="checkbox" id="isPlusWord">
-                <label for="isPlusWord"><b>CheckPlus</b></label>
+                <input type="radio" name="checkword" id="checkword1" value="check" checked>
+                <label for="checkword1"><b>Basic</b></label>
+                <input type="radio" name="checkword" id="checkword2" value="checkbert">
+                <label for="checkword2"><b>BERT</b></label>
+                <input type="radio" name="checkword" id="checkword3" value="checkplus">
+                <label for="checkword3"><b>Fused</b></label>
                 <h3>Check for word</h3>
                 <input id="word" type="text" placeholder="Please enter some text">
                 <button id="check_word" class="check_button">Submit</button>
